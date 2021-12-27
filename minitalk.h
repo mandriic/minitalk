@@ -19,7 +19,7 @@
 
 void	my_handler(int signum, siginfo_t *siginfo, void *old);
 int		ft_atoi(const char *str);
-void	send_bit_byte(int pid);
+void	send_bit_byte(int pid, char *argv);
 void	ft_putstr_fd(char *s, int fd);
 void	ft_putnbr_fd(int n, int fd);
 void	ft_almacen(char c);

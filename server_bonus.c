@@ -10,19 +10,20 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minitalk_bonus.h"
+#include "minitalk.h"
 
 void	ft_almacen(char c)
 {
-	static char almacen[4096];
-	static int i = 0;
+	static char	almacen[4096];
+	static int	i = 0;
+
 	almacen[i++] = c;
- 	if (c == 0)
- 	{
+	if (c == 0)
+	{
 		ft_putstr_fd(almacen, 1);
 		almacen[0] = '\0';
 		i = 0;
- 	}
+	}
 }
 
 void	my_handler(int signum, siginfo_t *siginfo, void *old)
@@ -59,7 +60,7 @@ int	main(void)
 	test.sa_sigaction = my_handler;
 	ft_putstr_fd ("PID: ", 1);
 	ft_putnbr_fd (getpid(), 1);
-	write(1,"\n", 1);
+	write(1, "\n", 1);
 	sigaction(SIGUSR1, &test, 0);
 	sigaction(SIGUSR2, &test, 0);
 	while (1)

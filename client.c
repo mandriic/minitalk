@@ -12,8 +12,6 @@
 
 #include "minitalk.h"
 
-char	**g_copy_arg;
-
 void	my_handler(int signum, siginfo_t *siginfo, void *old)
 {
 	static int	i = 0;
@@ -48,7 +46,7 @@ void	ft_send_zero(int pid, struct sigaction confirm)
 	}
 }
 
-void	send_bit_byte(int pid)
+void	send_bit_byte(int pid, char *argv)
 {
 	static int			nbit = 0;
 	static int			i = 0;
@@ -58,9 +56,9 @@ void	send_bit_byte(int pid)
 	confirm.sa_sigaction = my_handler;
 	sigaction(SIGUSR2, &confirm, 0);
 	sigaction(SIGUSR1, &confirm, 0);
-	while (g_copy_arg[2][i])
+	while (argv[i])
 	{
-		if (0b10000000 >> nbit & g_copy_arg[2][i])
+		if (0b10000000 >> nbit & argv[i])
 			kill(pid, SIGUSR1);
 		else
 			kill(pid, SIGUSR2);
@@ -71,7 +69,7 @@ void	send_bit_byte(int pid)
 			nbit = 0;
 			i++;
 		}
-		if (!g_copy_arg[2][i])
+		if (!argv[i])
 			ft_send_zero(pid, confirm);
 	}
 }
@@ -80,10 +78,9 @@ int	main(int argc, char **argv)
 {
 	int	pid;
 
-	g_copy_arg = argv;
 	if (argc == 3)
 	{
 		pid = ft_atoi(argv[1]);
-		send_bit_byte(pid);
+		send_bit_byte(pid, argv[2]);
 	}
 }
