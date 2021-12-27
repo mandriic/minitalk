@@ -18,13 +18,13 @@ void	my_handler(int signum, siginfo_t *siginfo, void *old)
 
 	(void) siginfo;
 	(void) old;
-	if (signum == 12)
+	if (signum == SIGUSR2)
 	{
 		ft_putstr_fd("Signal # ", 1);
 		ft_putnbr_fd(i++, 1);
 		ft_putstr_fd(" recived, was 0\n", 1);
 	}
-	if (signum == 10)
+	if (signum == SIGUSR1)
 	{
 		ft_putstr_fd("Signal # ", 1);
 		ft_putnbr_fd(i++, 1);
@@ -46,7 +46,7 @@ void	ft_send_zero(int pid, struct sigaction confirm)
 	}
 }
 
-void	send_bit_byte(int pid, char *argv)
+void	send_bit_byte(int pids, char *argv)
 {
 	static int			nbit = 0;
 	static int			i = 0;
@@ -59,9 +59,9 @@ void	send_bit_byte(int pid, char *argv)
 	while (argv[i])
 	{
 		if (0b10000000 >> nbit & argv[i])
-			kill(pid, SIGUSR1);
+			kill(pids, SIGUSR1);
 		else
-			kill(pid, SIGUSR2);
+			kill(pids, SIGUSR2);
 		pause();
 		nbit++;
 		if (nbit == 8)
@@ -70,7 +70,7 @@ void	send_bit_byte(int pid, char *argv)
 			i++;
 		}
 		if (!argv[i])
-			ft_send_zero(pid, confirm);
+			ft_send_zero(pids, confirm);
 	}
 }
 

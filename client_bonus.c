@@ -12,21 +12,19 @@
 
 #include "minitalk_bonus.h"
 
-char	**g_copy_arg;
-
 void	my_handler(int signum, siginfo_t *siginfo, void *old)
 {
 	static int	i = 0;
 
 	(void) siginfo;
 	(void) old;
-	if (signum == 12)
+	if (signum == SIGUSR2)
 	{
 		ft_putstr_fd("Signal # ", 1);
 		ft_putnbr_fd(i++, 1);
 		ft_putstr_fd(" recived, was 0\n", 1);
 	}
-	if (signum == 10)
+	if (signum == SIGUSR1)
 	{
 		ft_putstr_fd("Signal # ", 1);
 		ft_putnbr_fd(i++, 1);
@@ -48,7 +46,7 @@ void	ft_send_zero(int pid, struct sigaction confirm)
 	}
 }
 
-void	send_bit_byte(int pid)
+void	send_bit_byte(int pids, char *argv)
 {
 	static int			nbit = 0;
 	static int			i = 0;
@@ -58,12 +56,12 @@ void	send_bit_byte(int pid)
 	confirm.sa_sigaction = my_handler;
 	sigaction(SIGUSR2, &confirm, 0);
 	sigaction(SIGUSR1, &confirm, 0);
-	while (g_copy_arg[2][i])
+	while (argv[i])
 	{
-		if (0b10000000 >> nbit & g_copy_arg[2][i])
-			kill(pid, SIGUSR1);
+		if (0b10000000 >> nbit & argv[i])
+			kill(pids, SIGUSR1);
 		else
-			kill(pid, SIGUSR2);
+			kill(pids, SIGUSR2);
 		pause();
 		nbit++;
 		if (nbit == 8)
@@ -71,8 +69,8 @@ void	send_bit_byte(int pid)
 			nbit = 0;
 			i++;
 		}
-		if (!g_copy_arg[2][i])
-			ft_send_zero(pid, confirm);
+		if (!argv[i])
+			ft_send_zero(pids, confirm);
 	}
 }
 
@@ -80,10 +78,9 @@ int	main(int argc, char **argv)
 {
 	int	pid;
 
-	g_copy_arg = argv;
 	if (argc == 3)
 	{
 		pid = ft_atoi(argv[1]);
-		send_bit_byte(pid);
+		send_bit_byte(pid, argv[2]);
 	}
 }

@@ -10,11 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minitalk.h"
+#include "minitalk_bonus.h"
 
 void	ft_almacen(char c)
 {
-	static char	almacen[4096];
+	static char	almacen[100000];
 	static int	i = 0;
 
 	almacen[i++] = c;
@@ -36,12 +36,12 @@ void	my_handler(int signum, siginfo_t *siginfo, void *old)
 	{
 		c += (1 << nbit);
 		usleep(50);
-		kill(siginfo->si_pid, 10);
+		kill(siginfo->si_pid, SIGUSR1);
 	}
 	if (signum == SIGUSR2)
 	{
 		usleep(50);
-		kill(siginfo->si_pid, 12);
+		kill(siginfo->si_pid, SIGUSR2);
 	}
 	nbit--;
 	if (nbit == -1)
